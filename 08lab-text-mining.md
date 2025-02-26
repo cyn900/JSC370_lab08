@@ -20,7 +20,7 @@ from <https://www.mtsamples.com/> available at
     Quercus.
 
 2.  Render the Rmarkdown document using `github_document` and add it to
-    your github site. Add link to github site in your html.
+    your github site. Add link to github site in your html: <https://github.com/cyn900/JSC370_lab08>
 
 ### Setup packages
 
