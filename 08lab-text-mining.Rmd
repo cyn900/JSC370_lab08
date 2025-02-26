@@ -1,8 +1,6 @@
 ---
 title: "Lab 08 - Text Mining/NLP"
-output:
-  github_document:
-    html_preview: false
+output: html_document
 ---
 
 ```{r setup, echo=FALSE}
@@ -103,7 +101,9 @@ ggplot(top_words, aes(x = reorder(word, n), y = n, fill = word)) +
   theme(legend.position = "none")  # Remove the legend to simplify the plot
 
 # Creating a word cloud of the top 20 most frequent words
-wordcloud2(top_words)
+wordcloud_data <- top_words %>%
+  rename(freq = n, word = word)
+wordcloud2(wordcloud_data)
 ```
 
 The result from the bar plot indeed makes sense statistically, as it accurately reflects the count of each word, and it’s common to see stop words dominate such frequency distributions in unfiltered text data. However, this type of result may not be particularly helpful for gaining insights into the specific content of medical transcriptions.
@@ -123,17 +123,27 @@ The result from the bar plot indeed makes sense statistically, as it accurately 
 head(stopwords("english"))
 length(stopwords("english"))
 head(stop_words)
-custom_stop_words <- c("left", "right", "else","also", "will","without")  # Add any word you find uninformative
 
+# Define custom stopwords
+custom_stop_words <- c("left", "right", "else", "also", "will", "without")
+
+# Tokenize words, remove stopwords & numbers
 tokens <- mt_samples %>%
   select(transcription) %>%
   unnest_tokens(word, transcription) %>%
-  filter(!word %in% stopwords("english"), !word %in% custom_stop_words) %>%
-  filter(!grepl("^[0-9]+$", word))  # Use regex to remove words that are purely numbers
+  filter(!word %in% stopwords("en"), !word %in% custom_stop_words) %>%
+  filter(!grepl("^[0-9]+$", word))  # Remove numbers
 
+
+# Count word frequencies and keep top 20
 word_counts <- tokens %>%
   count(word, sort = TRUE) %>%
-  top_n(20, n)  # Select top 20 for visualization
+  slice_max(n, n = 20)  # Select top 20 words
+
+# Ensure correct format for wordcloud2()
+wordcloud_data <- word_counts %>%
+  rename(freq = n, word = word) %>%
+  as.data.frame()
 
 # Bar plot of the top 20 words
 ggplot(word_counts, aes(x = reorder(word, n), y = n, fill = word)) +
@@ -145,8 +155,8 @@ ggplot(word_counts, aes(x = reorder(word, n), y = n, fill = word)) +
   theme_minimal() +
   theme(legend.position = "none")
 
-# Word cloud of the top 20 words
-wordcloud2(word_counts)
+# Generate word cloud
+wordcloud2(wordcloud_data)
 
 ```
 
