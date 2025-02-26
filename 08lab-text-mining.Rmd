@@ -23,7 +23,7 @@ For this lab we will be working with the medical record transcriptions from http
 
 1. Questions 1-7 answered, knit to pdf or html output uploaded to Quercus.
 
-2. Render the Rmarkdown document using `github_document` and add it to your github site. Add link to github site in your html.
+2. Render the Rmarkdown document using `github_document` and add it to your github site. Add link to github site in your html: https://github.com/cyn900/JSC370_lab08
 
 
 ### Setup packages
